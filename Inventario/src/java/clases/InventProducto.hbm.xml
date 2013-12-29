@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/12/2013 09:26:31 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="clases.InventProducto" table="invent_producto" catalog="inventario">
+        <id name="identificador" type="java.lang.Integer">
+            <column name="identificador" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="100" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="300" not-null="true" />
+        </property>
+        <property name="unidadDeMedida" type="string">
+            <column name="unidad_de_medida" length="10" not-null="true" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="tipo" length="10" not-null="true" />
+        </property>
+        <property name="imagen" type="string">
+            <column name="imagen" length="200" />
+        </property>
+        <set name="inventHistorials" inverse="true">
+            <key>
+                <column name="producto_id" not-null="true" />
+            </key>
+            <one-to-many class="clases.InventHistorial" />
+        </set>
+    </class>
+</hibernate-mapping>

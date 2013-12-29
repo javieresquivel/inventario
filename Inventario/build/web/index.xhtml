@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Registro de Productos</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+        <p:panel header="Productos" style="margin: 10px 10%">
+            
+            <p:poll interval="20" process="#{controladorProducto.obtenerProductos()}" update="tablaProductos" />  
+            
+                <p:growl id="msn"/>
+                
+                <h:panelGrid columns="1" style="margin: 10px auto">
+                    <p:commandButton value="Agregar Producto" oncomplete="dlg2.show()"/>
+                </h:panelGrid>
+                
+                <p:dataTable rendered="true" paginator="true" selection="#{controladorProducto.productoSeleccionado}" rowKey="#{producto.identificador}" selectionMode="single"  id="tablaProductos" rows="10" value="#{controladorProducto.listaProductos}" var="producto">
+                    
+                    <p:ajax event="rowSelect" update=":form2:display :form:msn" oncomplete="PF('carDialog').show()" />  
+                    
+                    <p:column sortBy="#{producto.identificador}}" headerText="Id">
+                        <h:outputText value="#{producto.identificador}" />
+                    </p:column>
+                    
+                    <p:column sortBy="#{producto.nombre}" filterBy="#{producto.nombre}" headerText="Nombre">
+                        <h:outputText value="#{producto.nombre}" />
+                    </p:column>
+                    
+                    <p:column sortBy="#{producto.tipo}" filterBy="#{producto.tipo}" headerText="Inventario">
+                        <h:outputText value="#{producto.tipo}" />
+                    </p:column>
+                    
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{producto.descripcion}" />
+                    </p:column>
+
+                </p:dataTable>
+                
+        </p:panel>
+            
+            <p:dialog id="modalDialog" dynamic="true" header="Agregar Producto" resizable="false" showEffect="fade" hideEffect="explode" widgetVar="dlg2" modal="true" >  
+    
+
+                <h:panelGrid  id="agregarInfo" columns="2" cellspacing="10" style="margin: auto">
+                    <h:outputText value="Nombre" />
+                    <p:inputText required="true" label="Nombre" value="#{controladorProducto.producto.nombre}" style="width: 100%"/>
+                    
+                    <h:outputText value="Unidad de Medida:" />
+                    <p:selectOneMenu label="Unidad de Medida" required="true" value="#{controladorProducto.producto.unidadDeMedida}" style="width: 100%">  
+                        <f:selectItem itemLabel="Seleccione uno" itemValue="" />  
+                        <f:selectItem itemLabel="Unidades" itemValue="Unidades" />
+                        <f:selectItem itemLabel="Gramos" itemValue="Gramos" />
+                        <f:selectItem itemLabel="KiloGramos" itemValue="KiloGramos" />
+                        <f:selectItem itemLabel="Litros" itemValue="Litros" />  
+                        <f:selectItem itemLabel="Otro" itemValue="Otro" />  
+                    </p:selectOneMenu>
+                    
+                    <h:outputText value="Inventario" />
+                    <p:selectOneMenu label="Inventario" required="true" value="#{controladorProducto.producto.tipo}" style="width: 100%">  
+                        <f:selectItem itemLabel="Seleccione uno" itemValue="" />  
+                        <f:selectItem itemLabel="Comestible" itemValue="Comestible" />
+                        <f:selectItem itemLabel="Mateleria" itemValue="Manteleria" />
+                        <f:selectItem itemLabel="Enceres" itemValue="Enceres" />  
+                        <f:selectItem itemLabel="Otro" itemValue="Otro" />  
+                    </p:selectOneMenu>
+                    
+                    <h:outputText value="Imagen (Opcional)"/>
+                    <p:inputText style="width: 100%"/>
+                    
+                    <h:outputText value="Descripción"/>
+                    <p:inputTextarea required="true" value="#{controladorProducto.producto.descripcion}" style="width: 100%"/>
+                    
+                    <p:commandButton style="margin: auto" value="Guardar" action="#{controladorProducto.agregarProducto()}" partialSubmit="true" update="msn,agregarInfo,tablaProductos" />
+                </h:panelGrid>
+            </p:dialog> 
+        </h:form>
+        
+        <h:form id="form2">
+            <p:dialog header="Informacion detallada" widgetVar="carDialog" closeOnEscape="true" dynamic="true" resizable="false" id="carDlg"  
+                                          showEffect="fade" hideEffect="explode" modal="true"  >                  
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Nombre: "/>
+                    <h:outputText value="#{controladorProducto.productoSeleccionado.nombre}" />
+            
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        
+        <p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">  
+    <f:facet name="start">  
+        <p:graphicImage value="/images/loading.gif" />  
+    </f:facet>  
+  
+    <f:facet name="complete">  
+        <h:outputText value="" />  
+    </f:facet>  
+</p:ajaxStatus> 
+    </h:body>
+</html>
+
